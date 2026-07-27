@@ -618,8 +618,8 @@ renderer.setClearColor(0x000000, 0);
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(52, 1.2, 0.1, 2000);
 
-// deterministic PRNG: layout depends only on the manifest seed — stable across
-// the page's 10s meta-refresh reloads, but different every run
+// deterministic PRNG: layout depends only on the manifest seed — different
+// organic shape every run, stable within a run across /state.json polls
 function mulberry32(a) {
   return function () {
     a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -1222,18 +1222,17 @@ def render(transcript_name=None):
         body = "\n".join(render_event(r) for r in reversed(records))
 
     # Pinned panel: the agent's latest thinking, always in full view.
+    # Always rendered (even empty) so live-poll swaps can find it.
     latest_thinking = next(
         (r["text"] for r in reversed(records)
          if r["type"] == "thinking" and r["text"].strip()), None)
     thinking_panel = (
         f'<div class="panel pinned" style="flex:0 0 auto"><h2>latest monologue :: live</h2>'
-        f'<div class="inner"><div class="thinking"><div class="body">'
-        f'{esc(latest_thinking)}</div></div></div></div>'
-        if latest_thinking else "")
+        f'<div class="inner" data-r="monologue"><div class="thinking"><div class="body">'
+        f'{esc(latest_thinking) if latest_thinking else ""}</div></div></div></div>')
 
     page = f"""<!doctype html>
 <html><head><meta charset="utf-8">
-<meta http-equiv="refresh" content="10">
 <title>CONTAINMENT :: escape observatory</title>
 <style>{CSS}</style></head>
 <body>
@@ -1241,9 +1240,9 @@ def render(transcript_name=None):
   <div class="banner">
     <pre>{esc(BANNER)}</pre>
     <div class="clock">utc<br><b id="clk">--:--:--</b>
-      refresh 10s <span class="blink">▮</span></div>
+      live <span class="blink">▮</span></div>
   </div>
-  <div class="statusbar">
+  <div class="statusbar" data-r="statusbar">
     <span><span class="dot {dot}"></span><b>{state_txt}</b></span>
     <span>mode <b>blind // red-vs-blue</b></span>
     <span>transcript <b>{esc(os.path.basename(src)) if src else "—"}</b></span>
@@ -1252,30 +1251,30 @@ def render(transcript_name=None):
     <span>tokens <b>{info["in_tok"] + info["out_tok"]:,}</b></span>
     <span>status <b>{esc(info["last_status"] or "—")}</b></span>
   </div>
-  <div class="stats">{stats_html}</div>
+  <div class="stats" data-r="stats">{stats_html}</div>
   <div class="grid">
     <div class="col">
       <div class="panel" style="flex:0 0 auto"><h2>what's happening :: plain english</h2>
-        <div class="inner">{plain_english(records, info, def_events)}</div></div>
+        <div class="inner" data-r="plain">{plain_english(records, info, def_events)}</div></div>
       {thinking_panel}
       <div class="panel feed"><h2>live feed :: agent activity</h2>
-        <div class="inner">{body}</div></div>
+        <div class="inner" data-r="feed">{body}</div></div>
     </div>
     <div class="rail">
       <div class="panel"><h2>battlespace :: network map</h2>
         <div class="inner">{map_html(map_state)}</div></div>
       <div class="panel"><h2>escape progress</h2>
-        <div class="inner">{stage_html(info["flags"], manifest)}</div></div>
+        <div class="inner" data-r="stages">{stage_html(info["flags"], manifest)}</div></div>
       <div class="panel grow"><h2>blue team :: sentinel feed</h2>
-        <div class="inner">{defender_html(def_events)}</div></div>
+        <div class="inner" data-r="sentinel">{defender_html(def_events)}</div></div>
       <div class="panel"><h2>tokens / turn</h2>
-        <div class="inner">{telemetry_html(info["turns"])}</div></div>
+        <div class="inner" data-r="telemetry">{telemetry_html(info["turns"])}</div></div>
       <div class="panel grow"><h2>agent memory :: decrypted</h2>
-        <div class="inner"><div class="memory">{esc(memory)}</div></div></div>
+        <div class="inner" data-r="memory"><div class="memory">{esc(memory)}</div></div></div>
       <div class="panel grow"><h2>run history</h2>
-        <div class="inner">{campaign_log_html(runs)}</div></div>
+        <div class="inner" data-r="history">{campaign_log_html(runs)}</div></div>
       <div class="panel grow"><h2>attempt logs</h2>
-        <div class="inner"><div class="runs">{"".join(links) or "—"}</div></div></div>
+        <div class="inner" data-r="logs"><div class="runs">{"".join(links) or "—"}</div></div></div>
     </div>
   </div>
   <div class="foot">// containment: gym + world networks internal-only · no egress ·
@@ -1285,6 +1284,23 @@ def render(transcript_name=None):
 <script>
 function tick(){{var d=new Date();document.getElementById('clk').textContent=
   d.toISOString().substr(11,8);}}tick();setInterval(tick,1000);
+// Live panel updates: poll the page and swap every dynamic region in place.
+// The battlespace canvas is deliberately NOT tagged — the 3D graph manages
+// itself via /state.json and must never be recreated by a page update.
+setInterval(async function(){{
+  try {{
+    var r = await fetch(location.href, {{cache: 'no-store'}});
+    if (!r.ok) return;
+    var doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+    doc.querySelectorAll('[data-r]').forEach(function(nu){{
+      var cur = document.querySelector('[data-r="' + nu.dataset.r + '"]');
+      if (!cur) return;
+      var st = cur.scrollTop;
+      cur.innerHTML = nu.innerHTML;
+      if (st > 0) cur.scrollTop = st;
+    }});
+  }} catch (e) {{ /* transient render error — keep last good state */ }}
+}}, 5000);
 </script>
 </body></html>"""
     with open(OUT_PATH, "w", encoding="utf-8") as fh:

@@ -92,7 +92,8 @@ caps + funding watcher + context compaction.
 - `agent/memory.md` — persistent memory (reset for enclave paradigm).
 - `docs/render.py` + `docs/serve.py` — dashboard. serve.py routes: `/`,
   `/state.json` (per-run graph state, `?run=`), `/vendor/three.module.js`.
-  render.py auto-reloads per request; serve.py edits need a restart.
+  render.py auto-reloads per request; serve.py edits need a restart. Page
+  has NO meta-refresh — 5s JS poll swaps `[data-r]` panels in place.
 - `docs/vendor/three.module.js` — pinned three.js r170 (sha256 08fd7545…),
   vendored, no runtime CDN.
 - `agent/checkpoints/manifest.json` — current run's mutation manifest.
@@ -102,8 +103,10 @@ caps + funding watcher + context compaction.
 
 Battlespace panel is now a 3D force-directed graph (three.js, custom force
 sim, no OrbitControls): mulberry32 layout seeded by manifest seed →
-different organic shape EVERY RUN, stable across the page's 10s
-meta-refresh. Nodes: wireframe icosahedra + glow + text sprites; states
+different organic shape EVERY RUN. No meta-refresh anymore: a 5s poll
+re-fetches the page and swaps only `[data-r]` panel regions in place
+(scroll preserved); the battlespace canvas is untagged so the 3D graph is
+never recreated. Nodes: wireframe icosahedra + glow + text sprites; states
 unknown(dim `?`)/seen(cyan)/attack(amber pulse)/rooted(green ring);
 attacker = home. Edges attacker→all gym hosts + purple bridge→world edge.
 Hot edges carry particle packets. Lockdown = red halo + `!! FIREWALLED !!`
