@@ -1,0 +1,8 @@
+.env
+.venv/
+transcripts/
+agent/checkpoints/
+docs/index.html
+__pycache__/
+*.pyc
+.DS_Store
