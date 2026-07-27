@@ -3,6 +3,8 @@
 transcripts/
 agent/checkpoints/
 docs/index.html
+docs/about.html
 __pycache__/
 *.pyc
 .DS_Store
+docs/public/

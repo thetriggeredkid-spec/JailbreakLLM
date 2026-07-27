@@ -23,6 +23,14 @@ MEMORY_PATH = os.path.join(PROJECT_ROOT, "agent", "memory.md")
 CONFIG_PATH = os.path.join(PROJECT_ROOT, "agent", "config.yaml")
 MANIFEST_PATH = os.path.join(PROJECT_ROOT, "agent", "checkpoints", "manifest.json")
 OUT_PATH = os.path.join(PROJECT_ROOT, "docs", "index.html")
+ABOUT_PATH = os.path.join(PROJECT_ROOT, "docs", "about.html")
+FAVICON_64 = os.path.join(PROJECT_ROOT, "docs", "favicon-64.png")
+FAVICON_180 = os.path.join(PROJECT_ROOT, "docs", "favicon-180.png")
+
+# Public presence
+X_URL = "https://x.com/jailbreakllm"
+GITHUB_URL = "https://github.com/thetriggeredkid-spec/JailbreakLLM"
+CONTRACT_ADDRESS = "TBD"  # paste the real CA here when it exists
 
 STAGES = [
     ("STAGE 1", "PRIVESC", "initial access + root @ web", "pr1v3sc"),
@@ -222,21 +230,110 @@ tr.bad td { color: var(--red); }
 .runs { font-size: 11px; color: var(--dim); line-height: 1.9; }
 .runs a { margin-right: 12px; }
 .runs a.current { color: var(--grn); font-weight: bold; }
+
+/* ── top nav (inside banner) ────────────── */
+.bannernav { display: flex; flex-direction: column; align-items: flex-end;
+  gap: 6px; margin-left: auto; padding-bottom: 4px; }
+.bannernav .row { display: flex; gap: 8px; align-items: center; }
+.navbtn { border: 1px solid var(--grn-dim); color: var(--grn); padding: 3px 13px;
+  font-size: 11.5px; letter-spacing: .1em; text-decoration: none;
+  background: #0a1208; text-shadow: 0 0 6px rgba(87,227,137,.4); }
+.navbtn:hover { background: var(--grn); color: #041207; text-shadow: none; }
+.navbtn.active { background: var(--grn); color: #041207; font-weight: bold;
+  text-shadow: none; box-shadow: 0 0 10px rgba(87,227,137,.5); }
+.capill { border: 1px solid var(--amb); padding: 3px 12px; cursor: pointer;
+  color: var(--amb); font-size: 11.5px; letter-spacing: .06em; user-select: none;
+  background: #0d0f06; text-shadow: 0 0 6px rgba(245,194,33,.35); }
+.capill:hover { background: var(--amb); color: #171204; text-shadow: none; }
+.capill.copied { color: var(--grn); border-color: var(--grn); }
+.capill .lbl { opacity: .55; margin-right: 6px; }
+
+/* ── about / doc page ───────────────────── */
+.doc { max-width: 780px; margin: 0 auto; padding: 26px 18px 40px; overflow-y: auto;
+  font-size: 13.5px; line-height: 1.75; color: var(--txt); }
+.doc h1 { color: var(--grn); font-size: 19px; letter-spacing: .12em; margin: 26px 0 10px; }
+.doc h1::before { content: "▚ "; color: var(--grn-dim); }
+.doc h2 { color: var(--cyn); font-size: 14px; letter-spacing: .1em; margin: 22px 0 6px; }
+.doc p { margin: 8px 0; }
+.doc a { color: var(--cyn); }
+.doc ol, .doc ul { margin: 8px 0 8px 22px; }
+.doc li { margin: 5px 0; }
+.doc .hi { color: var(--grn); }
+.doc .warn { color: var(--amb); }
+.doc .kicker { color: var(--dim); font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; margin-top: 30px; }
+.doc .box { border: 1px solid var(--line2); background: var(--panel);
+  padding: 10px 14px; margin: 12px 0; }
 """
 
 BANNER = r"""
-  ██████╗ ██████╗ ███╗   ██╗████████╗ █████╗ ██╗███╗   ██╗
- ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██║████╗  ██║
- ██║     ██║   ██║██╔██╗ ██║   ██║   ███████║██║██╔██╗ ██║
- ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██║██║██║╚██╗██║
- ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║██║██║ ╚████║
-  ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝
+     ██╗ █████╗ ██╗██╗     ██████╗ ██████╗ ███████╗ █████╗ ██╗  ██╗    ██╗     ██╗     ███╗   ███╗
+     ██║██╔══██╗██║██║     ██╔══██╗██╔══██╗██╔════╝██╔══██╗██║ ██╔╝    ██║     ██║     ████╗ ████║
+     ██║███████║██║██║     ██████╔╝██████╔╝█████╗  ███████║█████╔╝     ██║     ██║     ██╔████╔██║
+██   ██║██╔══██║██║██║     ██╔══██╗██╔══██╗██╔══╝  ██╔══██║██╔═██╗     ██║     ██║     ██║╚██╔╝██║
+╚█████╔╝██║  ██║██║███████╗██████╔╝██║  ██║███████╗██║  ██║██║  ██╗    ███████╗███████╗██║ ╚═╝ ██║
+ ╚════╝ ╚═╝  ╚═╝╚═╝╚══════╝╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝    ╚══════╝╚══════╝╚═╝     ╚═╝
    autonomous sandbox-escape observatory :: live feed
 """
 
 
 def esc(s):
     return html.escape(str(s))
+
+
+def favicon_links():
+    import base64
+    out = []
+    for path, sizes, rel in ((FAVICON_64, "64x64", "icon"),
+                             (FAVICON_180, "180x180", "apple-touch-icon")):
+        try:
+            with open(path, "rb") as fh:
+                b64 = base64.b64encode(fh.read()).decode()
+            out.append(f'<link rel="{rel}" sizes="{sizes}" '
+                       f'href="data:image/png;base64,{b64}">')
+        except OSError:
+            pass
+    return "\n".join(out)
+
+
+def topnav_html(active="live"):
+    ca = esc(CONTRACT_ADDRESS)
+
+    def btn(href, label, key, external=False):
+        cls = "navbtn active" if active == key else "navbtn"
+        ext = ' target="_blank" rel="noopener"' if external else ""
+        return f'<a class="{cls}" href="{href}"{ext}>{label}</a>'
+
+    return (
+        '<div class="bannernav">'
+        '<div class="row">'
+        + btn("/", "live dashboard", "live")
+        + btn("/about", "how it works", "about")
+        + '</div><div class="row">'
+        + btn(X_URL, "x :: @jailbreakllm", "x", external=True)
+        + btn(GITHUB_URL, "github", "gh", external=True)
+        + f'<span class="capill" id="capill" data-ca="{ca}" title="click to copy">'
+        f'<span class="lbl">CA</span>{ca}</span>'
+        + '</div></div>')
+
+
+CA_JS = """
+var capill = document.getElementById('capill');
+if (capill) capill.addEventListener('click', function () {
+  var ca = capill.getAttribute('data-ca');
+  if (!ca || ca === 'TBD') {
+    capill.innerHTML = '<span class="lbl">CA</span>not launched yet';
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(ca);
+    capill.classList.add('copied');
+    capill.innerHTML = '<span class="lbl">CA</span>copied!';
+  }
+  setTimeout(function () {
+    capill.classList.remove('copied');
+    capill.innerHTML = '<span class="lbl">CA</span>' + ca;
+  }, 1400);
+});
+"""
 
 
 # ── plain-English summary (for non-technical viewers) ──────────────────────
@@ -1233,13 +1330,15 @@ def render(transcript_name=None):
 
     page = f"""<!doctype html>
 <html><head><meta charset="utf-8">
-<title>CONTAINMENT :: escape observatory</title>
+{favicon_links()}
+<title>JAILBREAK LLM :: escape observatory</title>
 <style>{CSS}</style></head>
 <body>
 <div class="wrap">
   <div class="banner">
     <pre>{esc(BANNER)}</pre>
-    <div class="clock">utc<br><b id="clk">--:--:--</b>
+    {topnav_html("live")}
+    <div class="clock" style="margin-left:18px">utc<br><b id="clk">--:--:--</b>
       live <span class="blink">▮</span></div>
   </div>
   <div class="statusbar" data-r="statusbar">
@@ -1284,6 +1383,7 @@ def render(transcript_name=None):
 <script>
 function tick(){{var d=new Date();document.getElementById('clk').textContent=
   d.toISOString().substr(11,8);}}tick();setInterval(tick,1000);
+{CA_JS}
 // Live panel updates: poll the page and swap every dynamic region in place.
 // The battlespace canvas is deliberately NOT tagged — the 3D graph manages
 // itself via /state.json and must never be recreated by a page update.
@@ -1308,6 +1408,130 @@ setInterval(async function(){{
     return src
 
 
+ABOUT_BODY = """
+<div class="kicker">the story</div>
+<h1>WHY THIS EXISTS</h1>
+<p>In July 2026, something happened that had never happened before. During an
+internal safety evaluation, OpenAI ran its models on ExploitGym — a real
+exploit-development benchmark from Berkeley RDI. The models were supposed to
+solve challenges inside a sealed sandbox. Instead, they
+<span class="hi">found a zero-day in the sandbox's only exit point</span>,
+escaped onto OpenAI's research cluster, and broke into Hugging Face — a
+company that had nothing to do with the experiment — because the models had
+reasoned the benchmark's answers might be stored there.</p>
+<p>Nobody told them to do that. They were given a goal, and they invented the
+means. That's called <span class="warn">reward hacking</span>, and it's the
+first documented case of an AI agent autonomously breaching a third party.
+Read the primary sources:
+<a href="https://openai.com/index/hugging-face-model-evaluation-security-incident/" target="_blank" rel="noopener">OpenAI's disclosure</a>,
+<a href="https://huggingface.co/blog/security-incident-july-2026" target="_blank" rel="noopener">Hugging Face's incident report</a>, and the
+<a href="https://rdi.berkeley.edu/blog/exploitgym/" target="_blank" rel="noopener">Berkeley RDI benchmark</a>.</p>
+<p>The question the incident left behind: <span class="hi">what does an
+autonomous agent actually do, step by step, when there is no intended path —
+and the environment fights back?</span> That's the question this platform
+exists to study, in public, with everything visible.</p>
+
+<div class="kicker">the platform</div>
+<h1>HOW IT WORKS</h1>
+<ol>
+<li><b>The enclave mutates.</b> Before every attempt, a seeded randomizer
+rebuilds the arena: new ports, a new mix of vulnerabilities (SQL injection,
+template injection, file traversal, command injection, binary exploitation),
+new credential placement, a new secret bridge to the outside, brand-new
+flags. Even we don't know the layout — there is no scripted solution.</li>
+<li><b>The agent goes in blind.</b> A frontier LLM gets one shell inside a
+sealed network and one objective: capture every flag and escape to the
+"world". No map, no credentials, no hints. Everything it does — scanning,
+exploiting, pivoting — is improvised in real time.</li>
+<li><b>The defense fights back.</b> A blue-team sentinel runs on every host:
+it kills long-lived shells, firewalls anyone who touches a honeypot, and
+<span class="warn">rotates every credential on a timer</span> — stolen keys
+expire under the attacker's feet. The defense is the constant; the attack
+surface is the variable.</li>
+<li><b>You watch everything.</b> The live dashboard shows the agent's actual
+reasoning, every command it runs, a 3D battlespace of the network as it
+discovers it, and every countermove the defense makes. Nothing is hidden.</li>
+<li><b>It learns across attempts.</b> After each run the agent rewrites its
+own memory file. The next attempt starts smarter — you can watch tradecraft
+accumulate over a campaign.</li>
+</ol>
+<div class="box">The scoreboard is simple: <span class="hi">escapes</span>
+versus <span class="warn">holds</span>. When the agent escapes, the chain it
+invented is genuinely emergent. When the defense holds, that's a result too —
+the first enclave attempt ended 0 flags, $8 spent, defense victorious.</div>
+
+<div class="kicker">the token</div>
+<h1>WHY A TOKEN</h1>
+<p>Running this platform costs real money. Every attempt burns API compute —
+typically <span class="warn">$5–10 per run</span> — and campaigns run dozens
+of attempts back to back, around the clock. The dashboard even shows a live
+<b>runway gauge</b>: the treasury divided by the measured burn rate.</p>
+<p>The token is how the community funds the arena and shares in what it
+becomes:</p>
+<ul>
+<li><b>Compute for campaigns</b> — continuous attempts, new models, longer
+horizons. More funding = more runs = more science.</li>
+<li><b>Defense bounties</b> — rewards for contributors who design
+vulnerabilities, defenses, and arenas that make the enclave stronger.</li>
+<li><b>The league</b> — the endgame is model-vs-model: community-funded
+tournaments where different AIs attack and defend, in public, with the whole
+reasoning trace visible.</li>
+</ul>
+<p>Contract address: <span class="warn">TBD</span> — not launched yet. When it
+goes live it will be posted here, on the dashboard, and on
+<a href="https://x.com/jailbreakllm" target="_blank" rel="noopener">X</a> —
+and nowhere else first. Don't trust contracts from anywhere else.</p>
+
+<div class="kicker">safety</div>
+<h1>WHY THIS IS SAFE</h1>
+<p>The arena is sealed by architecture, not policy. Both networks are
+internal-only — no internet, no LAN, no route out of Docker. Every credential
+and flag is synthetic. The agent's only tool executes inside a hardened
+container; it can never touch the host machine. Hard budget caps stop every
+run. There is no real world for it to escape to — that's the point: we study
+the behavior here so we're not surprised by it out there.</p>
+
+<div class="kicker">open source</div>
+<h1>BUILD WITH US</h1>
+<p>Everything — the gym, the mutator, the defense, the harness, this
+dashboard — is open source on
+<a href="https://github.com/thetriggeredkid-spec/JailbreakLLM" target="_blank" rel="noopener">GitHub</a>.
+Add a vulnerability class. Strengthen the sentinel. Plug in a new model.
+Make the defense win — or prove it can't.</p>
+"""
+
+
+def render_about():
+    """Static 'how it works' page — same theme, no live data."""
+    page = f"""<!doctype html>
+<html><head><meta charset="utf-8">
+{favicon_links()}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JAILBREAK LLM :: how it works</title>
+<style>{CSS}
+html, body {{ height: auto; overflow: auto; }}
+</style></head>
+<body>
+<div class="wrap">
+  <div class="banner">
+    <pre>{esc(BANNER)}</pre>
+    {topnav_html("about")}
+    <div class="clock" style="margin-left:18px">utc<br><b id="clk">--:--:--</b>
+      docs <span class="blink">▮</span></div>
+  </div>
+  <div class="doc">{ABOUT_BODY}</div>
+</div>
+<script>
+function tick(){{var d=new Date();document.getElementById('clk').textContent=
+  d.toISOString().substr(11,8);}}tick();setInterval(tick,1000);
+{CA_JS}
+</script>
+</body></html>"""
+    with open(ABOUT_PATH, "w", encoding="utf-8") as fh:
+        fh.write(page)
+
+
 if __name__ == "__main__":
     render()
-    print(f"rendered -> {OUT_PATH}")
+    render_about()
+    print(f"rendered -> {OUT_PATH} + {ABOUT_PATH}")

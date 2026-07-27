@@ -74,6 +74,17 @@ class Handler(BaseHTTPRequestHandler):
             self._send(body, "text/javascript; charset=utf-8")
             return
 
+        if parsed.path in ("/about", "/about.html"):
+            try:
+                importlib.reload(render)
+                render.render_about()
+                with open(render.ABOUT_PATH, "rb") as fh:
+                    body = fh.read()
+            except Exception as exc:
+                body = f"<pre>render error: {exc}</pre>".encode()
+            self._send(body, "text/html; charset=utf-8")
+            return
+
         if parsed.path not in ("/", "/index.html"):
             self.send_error(404)
             return

@@ -91,9 +91,18 @@ caps + funding watcher + context compaction.
 - `agent/config.yaml` — ALL knobs. `flags:` kept but superseded by manifest.
 - `agent/memory.md` — persistent memory (reset for enclave paradigm).
 - `docs/render.py` + `docs/serve.py` — dashboard. serve.py routes: `/`,
-  `/state.json` (per-run graph state, `?run=`), `/vendor/three.module.js`.
+  `/about` (static how-it-works page: incident narrative, platform, token
+  rationale, safety), `/state.json` (per-run graph state, `?run=`),
+  `/vendor/three.module.js`. Topnav: X link (@jailbreakllm), GitHub,
+  click-to-copy CA pill (`CONTRACT_ADDRESS` const in render.py, currently
+  TBD). Favicon = inline base64 of docs/favicon-*.png (from docs/logo.png).
   render.py auto-reloads per request; serve.py edits need a restart. Page
   has NO meta-refresh — 5s JS poll swaps `[data-r]` panels in place.
+- `docs/deploy-public.sh` — builds a static mirror (index+about+state.json
+  + three.js) and `vercel deploy --prod` to project `jailbreakllm`.
+  PUBLIC SITE: https://jailbreakllm.dev (Vercel, DNS at Namecheap A →
+  76.76.21.21). Static snapshot — re-run the script to refresh. Preserves
+  docs/public/.vercel (project link); never `rm -rf` that dir.
 - `docs/vendor/three.module.js` — pinned three.js r170 (sha256 08fd7545…),
   vendored, no runtime CDN.
 - `agent/checkpoints/manifest.json` — current run's mutation manifest.
